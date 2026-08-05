@@ -109,7 +109,52 @@ export class Robot {
     const updated = await this.client.updateRobot(this.id, updates as any);
     this.robotData = updated;
   }
+  /**
+   * Update the list limit for a scrape-list action in this robot's workflow.
+   *
+   * @param limit - The new maximum number of items to collect.
+   * @param location - Which scrape-list action to target within the workflow,
+   *   using its position (pairIndex/actionIndex/argIndex). Defaults to the
+   *   first pair/action/arg (0, 0, 0), which covers the common case of a
+   *   robot with a single scrape-list step.
+   */
+  async updateListLimit(
+    limit: number,
+    location: { pairIndex?: number; actionIndex?: number; argIndex?: number } = {}
+  ): Promise<void> {
+    const {
+      pairIndex = 0,
+      actionIndex = 0,
+      argIndex = 0
+    } = location;
 
+    // Debug log — must come AFTER the destructuring above,
+    // since that's what defines pairIndex/actionIndex/argIndex
+    console.log('Sending limits update:', JSON.stringify({
+      limits: [{ pairIndex, actionIndex, argIndex, limit }]
+    }));
+
+    const updated = await this.client.updateRobot(this.id, {
+      limits: [{ pairIndex, actionIndex, argIndex, limit }]
+    } as any);
+
+    this.robotData = updated;
+  }
+
+  /**
+ * Update saved credentials (e.g. login username/password) used by this
+ * robot's workflow. Keys must match the exact selector used in the
+ * workflow's type/click actions for the corresponding field.
+ */
+  async updateCredentials(
+    credentials: Record<string, { value: string; type: string }>
+  ): Promise<void> {
+    const updated = await this.client.updateRobot(this.id, {
+      credentials
+    } as any);
+
+    this.robotData = updated;
+  }
   /**
    * Get all webhooks for this robot
    */

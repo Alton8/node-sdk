@@ -2,7 +2,7 @@
  * Robot class - represents a saved workflow that can be executed
  */
 
-import { RunResult, RobotData, ScheduleConfig, WebhookConfig, ExecutionOptions, Run } from '../types';
+import { RunResult, RobotData, ScheduleConfig,  CrawlConfig, SearchConfig, WebhookConfig, ExecutionOptions, Run } from '../types';
 import { Client } from '../client/maxun-client';
 
 export class Robot {
@@ -151,6 +151,20 @@ export class Robot {
   ): Promise<void> {
     const updated = await this.client.updateRobot(this.id, {
       credentials
+    } as any);
+
+    this.robotData = updated;
+  }
+
+  /**
+   * Update the starting URL this robot scrapes/crawls. Internally routed
+   * through the same meta.url mechanism the backend already supports —
+   * this method exists purely for a cleaner, more discoverable API rather
+   * than requiring callers to know to nest the URL inside `meta`.
+   */
+  async updateTargetUrl(url: string): Promise<void> {
+    const updated = await this.client.updateRobot(this.id, {
+      meta: { url }
     } as any);
 
     this.robotData = updated;

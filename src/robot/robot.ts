@@ -169,6 +169,20 @@ export class Robot {
 
     this.robotData = updated;
   }
+  async updateCrawlConfig(config: Partial<CrawlConfig>): Promise<void> {
+    const updated = await this.client.updateRobot(this.id, {
+      crawlConfig: config
+    } as any);
+
+    this.robotData = updated;
+  }
+  async updateSearchConfig(config: Partial<SearchConfig>): Promise<void> {
+    const updated = await this.client.updateRobot(this.id, {
+      searchConfig: config
+    } as any);
+
+    this.robotData = updated;
+  }
   /**
    * Get all webhooks for this robot
    */

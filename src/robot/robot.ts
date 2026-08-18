@@ -128,12 +128,6 @@ export class Robot {
       argIndex = 0
     } = location;
 
-    // Debug log — must come AFTER the destructuring above,
-    // since that's what defines pairIndex/actionIndex/argIndex
-    console.log('Sending limits update:', JSON.stringify({
-      limits: [{ pairIndex, actionIndex, argIndex, limit }]
-    }));
-
     const updated = await this.client.updateRobot(this.id, {
       limits: [{ pairIndex, actionIndex, argIndex, limit }]
     } as any);
